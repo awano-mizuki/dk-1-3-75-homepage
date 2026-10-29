@@ -1,895 +1,463 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>スロットゲーム 一年三組</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>75年度 DK1-3 | CASINO</title>
+  <style>
+    /* ===== 基本設定 ===== */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      color: #fff4d0;
+      background: radial-gradient(
+        ellipse at top,
+        #303020 0%,
+        #11130f 45%,
+        #070807 100%
+      );
+      text-align: center;
+    }
+    
+    /* ===== 画面切り替え用の設定 ===== */
+    .screen {
+      display: block;
+    }
+    .screen.hidden {
+      display: none !important;
+    }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c&family=Zen+Maru+Gothic&display=swap" rel="stylesheet">
+    /* ===== 上部の飾り ===== */
+    .top-line {
+      height: 6px;
+      background: linear-gradient(
+        90deg,
+        #7b5412,
+        #ffe7a0,
+        #bd8b25,
+        #fff0bb,
+        #7b5412
+      );
+    }
+    
+    /* ===== ヘッダー ===== */
+    header {
+      padding: 65px 20px 45px;
+      border-bottom: 1px solid #70571f;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(190, 145, 42, 0.13),
+        transparent 70%
+      );
+    }
+    .school-name {
+      margin: 0 0 20px;
+      color: #d8b968;
+      font-size: 13px;
+      letter-spacing: 5px;
+    }
+    h1 {
+      margin: 0;
+      color: #ffe6a0;
+      font-family: Georgia, "Yu Mincho", serif;
+      font-size: clamp(34px, 7vw, 62px);
+      font-weight: normal;
+      letter-spacing: 4px;
+      text-shadow: 0 0 25px rgba(255, 202, 77, 0.2);
+    }
+    .subtitle {
+      margin: 20px 0 0;
+      color: #c4b78f;
+      font-size: 13px;
+      letter-spacing: 4px;
+    }
+    .ornament {
+      margin-top: 30px;
+      color: #d6ae53;
+      font-size: 24px;
+      letter-spacing: 12px;
+    }
+    
+    /* ===== メインコンテンツ ===== */
+    main {
+      width: min(850px, 100%);
+      margin: 0 auto;
+      padding: 50px 22px 70px;
+    }
+    .intro {
+      max-width: 690px;
+      margin: 0 auto 55px;
+      color: #ddd5bd;
+      font-size: 15px;
+      line-height: 2.4;
+      text-align: left;
+    }
+    .section-label {
+      margin-bottom: 12px;
+      color: #c8a653;
+      font-size: 12px;
+      letter-spacing: 4px;
+    }
+    h2 {
+      margin: 0 0 35px;
+      color: #fff0c4;
+      font-family: "Yu Mincho", serif;
+      font-size: clamp(23px, 5vw, 32px);
+      font-weight: normal;
+      letter-spacing: 2px;
+    }
+    
+    /* ===== ゲーム一覧 ===== */
+    .our_making {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 0;
+      padding: 0;
+    }
+    .our_making li {
+      list-style: none;
+    }
+    .our_making li:last-child {
+      grid-column: 1 / -1;
+    }
+    .game-link {
+      position: relative;
+      display: flex;
+      min-height: 100px;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      overflow: hidden;
+      padding: 20px 12px;
+      border: 1px solid #78602b;
+      border-radius: 5px;
+      background: linear-gradient(
+        135deg,
+        #24251d,
+        #141510
+      );
+      color: #ffe4a0;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+    .game-link::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: #c7a04b;
+      content: "";
+      transition: width 0.25s ease;
+    }
+    .game-link:hover {
+      transform: translateY(-5px);
+      border-color: #f0cf76;
+      background: linear-gradient(
+        135deg,
+        #39301b,
+        #1b1a12
+      );
+      box-shadow: 0 8px 28px rgba(224, 174, 60, 0.14);
+    }
+    .game-link:hover::before {
+      width: 5px;
+    }
+    .game-icon {
+      font-size: 27px;
+    }
+    .game-name {
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+    .game-arrow {
+      margin-left: auto;
+      color: #c7a04b;
+      font-size: 20px;
+    }
 
-    <style>
-        body {
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            background-color: rgb(176, 61, 61);
-
-            font-family: "Zen Maru Gothic", sans-serif;
-            color: #ffd17de2;
-            font-weight: 600;
-            padding: 20px;
-            font-size: 24px;
-            line-height: 1.6;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            box-sizing: border-box;
-        }
-
-        .screen {
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        /* ルール説明 */
-        .panel {
-            background: rgba(0, 0, 0, 0.45);
-            border: 2px solid #fcf591;
-            border-radius: 8px;
-            padding: 8px 24px 24px;
-            text-align: left;
-        }
-
-        .panel ul,
-        .panel ol {
-            padding-left: 1.4em;
-        }
-
-        .panel hr {
-            border: 0;
-            border-top: 2px dashed #fcf591;
-            margin: 20px 0;
-        }
-
-        #screen-rules .panel h3 {
-            text-align: center;
-            margin-top: 0;
-        }
-
-        .bet-row {
-            margin: 6px 0;
-        }
-
-        .bet-row input[type="number"] {
-            font-size: 20px;
-            width: 6em;
-        }
-
-        .btn {
-            font-family: inherit;
-            font-size: 22px;
-            font-weight: 600;
-            padding: 8px 28px;
-            border: 2px solid #fcf591;
-            border-radius: 8px;
-            background: #df3e3e;
-            color: #fff3b0;
-            cursor: pointer;
-            margin-top: 12px;
-        }
-
-        .btn:hover {
-            background: #c93030;
-        }
-
-        /* スロット */
-        #game-screen {
-            font-family: "M PLUS Rounded 1c", sans-serif;
-            font-weight: 400;
-            position: relative;
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid #fcf591;
-            padding: 24px;
-            background-color: #df3e3e;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 600px;
-            box-sizing: border-box;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            width: 100px;
-            flex-shrink: 0;
-        }
-
-        .card-content {
-            padding: 16px;
-        }
-
-        .card-number {
-            font-size: 48px;
-            font-weight: bold;
-            text-align: center;
-            margin: 0;
-            color: #333;
-        }
-
-        #chance-area {
-            font-family: "Kosugi Maru", sans-serif;
-            margin: 12px auto 0;
-            max-width: 600px;
-            min-height: 1.6em;
-            text-align: center;
-            font-size: 18px;
-            color: #fff700;
-            text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
-        }
-
-        /* 結果画面 */
-        #screen-result p {
-            margin: 4px 0;
-        }
-
-        /* 管理者ボタン */
-        .admin {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 10;
-        }
-
-        .admin-link {
-            font-family: inherit;
-            font-size: 16px;
-            font-weight: 600;
-            color: #fcf591;
-            background: rgba(0, 0, 0, 0.45);
-            border: 1px solid #fcf591;
-            border-radius: 6px;
-            padding: 4px 12px;
-            cursor: pointer;
-        }
-
-        .admin-link:hover {
-            background: rgba(0, 0, 0, 0.65);
-        }
-
-        #screen-admin {
-            max-width: 760px;
-        }
-
-        .admin-doc {
-            font-size: 18px;
-            font-weight: 400;
-        }
-
-        .admin-doc h2 {
-            font-size: 24px;
-            margin-bottom: 4px;
-        }
-
-        .admin-doc h3 {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-
-        .admin-doc h4 {
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        .admin-doc pre {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-size: 15px;
-            overflow-x: auto;
-        }
-
-        /* パスワード欄 */
-        #passwordInput {
-            font-family: inherit;
-            font-size: 18px;
-            color: #333;
-            background: #cfa7a5;
-            border: 2px solid #fcf591;
-            border-radius: 10px;
-            outline: none;
-            padding: 8px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        #passwordInput:focus {
-            border-color: #fff700;
-            box-shadow: 0 0 8px rgba(255, 247, 0, 0.5);
-        }
-
-        @media (max-width: 420px) {
-            body {
-                padding: 12px;
-                font-size: 19px;
-            }
-
-            #game-screen {
-                gap: 8px;
-                padding: 12px;
-            }
-
-            .card {
-                width: 80px;
-            }
-
-            .card-content {
-                padding: 10px;
-            }
-
-            .card-number {
-                font-size: 40px;
-            }
-        }
-    </style>
+    /* ===== 内ページ共通スタイル ===== */
+    .game-content-page {
+      padding: 60px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 10px 24px;
+      border: 1px solid #c7a04b;
+      color: #ffe4a0;
+      text-decoration: none;
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-back:hover {
+      background: rgba(199, 160, 75, 0.2);
+    }
+    .member-list {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    .member-list .group-title {
+      font-weight: bold;
+      color: #d8b968;
+      margin-top: 20px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid #4d4021;
+      padding-bottom: 5px;
+    }
+    .member-list li:not(.group-title) {
+      padding: 6px 0;
+      padding-left: 15px;
+      position: relative;
+    }
+    .member-list li:not(.group-title)::before {
+      content: "✦";
+      position: absolute;
+      left: 0;
+      color: #c7a04b;
+    }
+    
+    /* ===== フッター ===== */
+    footer {
+      padding: 27px 20px;
+      border-top: 1px solid #4d4021;
+      color: #a99a73;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+    footer .author {
+      margin-top: 8px;
+      color: #e0c47c;
+    }
+    
+    /* ===== スマートフォン対応 ===== */
+    @media (max-width: 480px) {
+      header {
+        padding: 48px 16px 35px;
+      }
+      main {
+        padding: 38px 16px 50px;
+      }
+      .our_making {
+        grid-template-columns: 1fr;
+      }
+      .our_making li:last-child {
+        grid-column: auto;
+      }
+      .game-link {
+        min-height: 82px;
+      }
+      .intro {
+        font-size: 14px;
+      }
+    }
+    
+    /* 動きを減らす設定にも対応 */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-    <header class="admin">
-        <button type="button" class="admin-link" id="admin-open">
-            管理者サイトへ！
-        </button>
+  <!-- ホーム画面 -->
+  <section id="screen-home" class="screen">
+    <div class="top-line"></div>
+    <header>
+      <p class="school-name">75年度 DK1-3 PRESENTS</p>
+      <h1>一年三組へようこそ！</h1>
+      <p class="subtitle">WELCOME TO OUR CASINO</p>
+      <div class="ornament">✦ ◆ ✦</div>
     </header>
+    <main>
+      <p class="intro">
+        私たちのテーマは、「ディズニー風カジノ」。
+        中間テストが終了してから、はや二週間。
+        そんな二週間を、私たちは自分たちの自由な時間を削ってまで、
+        この出し物にそれぞれの形で協力し、自分たちのブースで研鑽を重ねていきました。
+        今日は、そんな私たちの努力の結晶を、
+        少しだけのぞいてみないでしょうか？
+      </p>
+      <p class="section-label">OUR ATTRACTIONS</p>
+      <h2>私たちはこんなものを作りました！</h2>
+      <ul class="our_making">
+        <li>
+          <a class="game-link" onclick="showScreen('horses')">
+            <span class="game-icon">🏇</span>
+            <span class="game-name">競馬</span>
+            <span class="game-arrow">›</span>
+          </a>
+        </li>
+        <li>
+          <a class="game-link" onclick="showScreen('darts')">
+            <span class="game-icon">🎯</span>
+            <span class="game-name">ダーツ</span>
+            <span class="game-arrow">›</span>
+          </a>
+        </li>
+        <li>
+          <a class="game-link" onclick="showScreen('slots')">
+            <span class="game-icon">🎰</span>
+            <span class="game-name">スロット</span>
+            <span class="game-arrow">›</span>
+          </a>
+        </li>
+        <li>
+          <a class="game-link" onclick="showScreen('rulets')">
+            <span class="game-icon">🎡</span>
+            <span class="game-name">ルーレット</span>
+            <span class="game-arrow">›</span>
+          </a>
+        </li>
+        <li>
+          <a class="game-link" onclick="showScreen('odd_or_even')">
+            <span class="game-icon">🃏</span>
+            <span class="game-name">ハンかチョウ</span>
+            <span class="game-arrow">›</span>
+          </a>
+        </li>
+      </ul>
+    </main>
+  </section>
 
-    <!-- ① ルール説明 -->
-    <section id="screen-rules" class="screen">
-        <h1>ルール説明</h1>
+  <!-- 競馬ページ -->
+  <section id="screen-horses" class="screen game-content-page hidden">
+    <h2>競馬班 メンバー</h2>
+    <ul class="member-list">
+      <li class="group-title">男子</li>
+      <li>メンバー1</li>
+      <li>メンバー2</li>
+      <li>メンバー3</li>
+      <li>メンバー4</li>
+      <li class="group-title">女子</li>
+      <li>メンバー5</li>
+      <li>メンバー6</li>
+      <li>メンバー7</li>
+      <li>メンバー8</li>
+    </ul>
+    <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
+  </section>
 
-        <div class="panel">
-            <ul>
-                <li>5～8の数字が三つ出てきます。</li>
-                <li>
-                    得点は、それぞれこうなっています。
-                    <ol>
-                        <li><p>777が出たら <span id="rule-jackpot">3</span> 倍</p></li>
-                        <li><p>8のゾロ目が出たら <span id="rule-zorome">2</span> 倍！</p></li>
-                        <li>そのほかの数字でのゾロ目で終了した場合：+50コイン</li>
-                        <li>その他ゾロ目ではない数字で終了した場合：何ももらえない</li>
-                    </ol>
-                </li>
-                <li>1ゲームあたり、基本5回回せます。</li>
-                <li>必ずコインをかけてください（50以上）。</li>
-                <li>不具合が発生した場合、近くのスタッフに言ってください。</li>
-                <li>二回遊んだら次の人にゆずってください。</li>
-            </ul>
+  <!-- ダーツページ -->
+  <section id="screen-darts" class="screen game-content-page hidden">
+    <h2>ダーツ班 メンバー</h2>
+    <ul class="member-list">
+        <li class="group-title">男子</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li class="group-title">女子</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
+  </section>
 
-            <hr>
+  <!-- スロットページ -->
+  <section id="screen-slots" class="screen game-content-page hidden">
+    <h2>スロット班 メンバー</h2>
+    <ul class="member-list">
+        <li class="group-title">男子</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li class="group-title">女子</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
+  </section>
 
-            <h3>どれくらいかけますか？</h3>
+  <!-- ルーレットページ -->
+  <section id="screen-rulets" class="screen game-content-page hidden">
+    <h2>ルーレット班 メンバー</h2>
+    <ul class="member-list">
+        <li class="group-title">男子</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li class="group-title">女子</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
+  </section>
 
-            <form id="bet-form">
-                <p class="bet-row">
-                    <input type="radio" name="bet" id="bed_50" value="50" required>
-                    <label for="bed_50">50かける！</label>
-                </p>
+  <!-- 半か丁 -->
+  <section id="screen-odd_or_even" class="screen game-content-page hidden">
+    <h2>半か丁班 メンバー</h2>
+    <ul class="member-list">
+        <li class="group-title">男子</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li class="group-title">女子</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
+  </section>
 
-                <p class="bet-row">
-                    <input type="radio" name="bet" id="bed_100" value="100">
-                    <label for="bed_100">100かける！</label>
-                </p>
+  <!-- フッター -->
+  <footer>
+    <div>75年度 DK1-3 CASINO</div>
+    <div class="author">その他、広報や内装、外装を手伝ってくれた皆さん。ありがとうございました。</div>
+    <div class="author">Present By: スロット班の粟野(文章案), 無料版ChatGPT(デザイン案), 無料版Gemini(スクリプト案)</div>
+  </footer>
 
-                <p class="bet-row">
-                    <input type="radio" name="bet" id="bed_150" value="150">
-                    <label for="bed_150">150かける！</label>
-                </p>
+  <script>
+    // ホーム画面も含めてすべての画面要素を定義
+    const screens = {
+      home: document.getElementById("screen-home"),
+      horses: document.getElementById("screen-horses"),
+      darts: document.getElementById("screen-darts"),
+      slots: document.getElementById("screen-slots"),
+      rulets: document.getElementById("screen-rulets"),
+      odd_or_even: document.getElementById("screen-odd_or_even")
+    };
 
-                <p class="bet-row">
-                    <input type="radio" name="bet" id="bed_200" value="200">
-                    <label for="bed_200">200かける！</label>
-                </p>
-
-                <p class="bet-row">
-                    <input type="radio" name="bet" id="bed_250" value="250">
-                    <label for="bed_250">250かける！</label>
-                </p>
-
-                <p class="bet-row">
-                    <input type="radio" name="bet" id="bed_300" value="300">
-                    <label for="bed_300">300かける！</label>
-                </p>
-
-                <p class="bet-row">
-                    <input type="radio" name="bet" id="bed_another" value="other">
-                    <label for="bed_another">それ以上かける！</label>
-                    <input
-                        type="number"
-                        id="bet_other"
-                        min="301"
-                        step="1"
-                        placeholder="301以上"
-                        disabled
-                    >
-                </p>
-
-                <p style="text-align: center;">
-                    <button type="submit" class="btn">決定</button>
-                </p>
-            </form>
-        </div>
-    </section>
-
-    <!-- ② スロット -->
-    <section id="screen-game" class="screen hidden">
-        <h1>スロット/パソコン版 一年三組</h1>
-
-        <div id="game-screen">
-            <div class="card">
-                <div class="card-content">
-                    <p class="card-number" id="num-a">-</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-content">
-                    <p class="card-number" id="num-b">-</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-content">
-                    <p class="card-number" id="num-c">-</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="chance-area">カードをクリックしてスタート</div>
-    </section>
-
-    <!-- ③ 獲得コイン -->
-    <section id="screen-result" class="screen hidden">
-        <h1>獲得コイン</h1>
-        <p>かけたコイン：<span id="res-bet"></span></p>
-        <p>出た数字：<span id="res-numbers"></span></p>
-        <p>倍率：<span id="res-multiplier"></span>倍</p>
-        <h1><span id="res-coins"></span>ゲット！</h1>
-        <p>遊んでくれてありがとう！</p>
-
-        <button type="button" class="btn" id="back-button">
-            トップに戻る
-        </button>
-    </section>
-
-    <!-- ④ 管理者ログイン -->
-    <section id="screen-admin_password" class="screen hidden">
-        <h1>管理者ログイン</h1>
-
-        <form id="loginForm">
-            <input
-                type="password"
-                id="passwordInput"
-                placeholder="パスワードを入力"
-                autocomplete="current-password"
-                required
-            >
-
-            <p>
-                <button type="submit" class="btn">ログイン</button>
-            </p>
-        </form>
-
-        <p id="statusMessage" role="status"></p>
-
-        <button type="button" class="btn" id="password-back">
-            もどる
-        </button>
-    </section>
-
-    <!-- ⑤ スタッフ向け説明 -->
-    <section id="screen-admin" class="screen hidden">
-        <h1>スタッフ向け-トリセツ</h1>
-
-        <div class="panel admin-doc">
-            <h2>1. 手順</h2>
-            <ol>
-                <li>school_festival_all.html を保存する。</li>
-                <li>ファイルをブラウザで開く。</li>
-                <li>終了！あとは後ろで見守るだけ！</li>
-            </ol>
-
-            <h2>2. そもそもこれは何？</h2>
-            <ul>
-                <li>Python版を作り、それをHTMLにしたスロットゲーム。</li>
-            </ul>
-
-            <h3>手動スロットチームにお詫び</h3>
-            <ul>
-                <li>倍率を変えるときは、下の設定を確認してください。</li>
-                <li>数字は5～8を使用しています。</li>
-            </ul>
-
-            <h4>倍率を変更する手順</h4>
-            <ol>
-                <li>
-                    script 内の MULTIPLIER を変更する。
-                    <pre><code>const MULTIPLIER = {
-    jackpot: 3,
-    other_zorome: 2,
-    other: 0
-};</code></pre>
-                </li>
-                <li>保存する（Command + S）。</li>
-                <li>ブラウザを更新する（Command + R）。</li>
-            </ol>
-
-            <h2>3. 不具合が起きたとき</h2>
-
-            <h3>クリックしても進まない</h3>
-            <ul>
-                <li>数字が表示されている最中は、少し待ってください。</li>
-            </ul>
-
-            <h3>最初からやり直したい</h3>
-            <ul>
-                <li>ブラウザを更新するか、トップに戻るボタンを押してください。</li>
-            </ul>
-
-            <h3>不具合が起きたとき</h3>
-            <ul>
-                <li>ブラウザを更新し、それでも直らなければ作成者に連絡してください。</li>
-            </ul>
-        </div>
-
-        <p>
-            <button type="button" class="btn" id="admin-back">
-                もどる
-            </button>
-        </p>
-    </section>
-
-    <script>
-        // ===== 設定 =====
-
-        const MULTIPLIER = {
-            jackpot: 3,
-            other_zorome: 2,
-            other: 0
-        };
-
-        const AUTO_DELAY = 1000;
-        const REVEAL_INTERVAL = 1000;
-        const NEXT_DELAY = 1500;
-
-        // 管理者パスワード
-        // 注意：HTML内のパスワードは、ソースを見れば確認できます。
-        const ADMIN_PASSWORD = "slot_1-3";
-
-        // ===== 画面の切り替え =====
-
-        const screens = {
-            rules: document.getElementById("screen-rules"),
-            game: document.getElementById("screen-game"),
-            result: document.getElementById("screen-result"),
-            password: document.getElementById("screen-admin_password"),
-            admin: document.getElementById("screen-admin")
-        };
-
-        const adminOpen = document.getElementById("admin-open");
-        let currentScreen = "rules";
-        let previousScreen = "rules";
-
-        function showScreen(name) {
-            if (!screens[name]) return;
-
-            currentScreen = name;
-
-            for (const key in screens) {
-                screens[key].classList.toggle(
-                    "hidden",
-                    key !== name
-                );
-            }
-
-            adminOpen.classList.toggle(
-                "hidden",
-                name === "password" || name === "admin"
-            );
+    // 指定された画面を表示し、それ以外を非表示にする関数
+    function showScreen(name) {
+      if (!screens[name]) return;
+      
+      for (const key in screens) {
+      if (key === name) {
+        screens[key].classList.remove("hidden");
+        } else {
+        screens[key].classList.add("hidden");
         }
-
-        // ===== ルール説明の倍率 =====
-
-        document.getElementById("rule-jackpot").textContent =
-            MULTIPLIER.jackpot;
-
-        document.getElementById("rule-zorome").textContent =
-            MULTIPLIER.other_zorome;
-
-        // ===== コイン設定 =====
-
-        const betForm = document.getElementById("bet-form");
-        const betOther = document.getElementById("bet_other");
-
-        let bet = 0;
-
-        betForm.querySelectorAll('input[name="bet"]').forEach((radio) => {
-            radio.addEventListener("change", () => {
-                const isOther = radio.value === "other" && radio.checked;
-
-                if (isOther) {
-                    betOther.disabled = false;
-                    betOther.required = true;
-                } else if (radio.checked) {
-                    betOther.disabled = true;
-                    betOther.required = false;
-                    betOther.value = "";
-                }
-            });
-        });
-
-        betForm.addEventListener("submit", (event) => {
-            event.preventDefault();
-
-            const selected = betForm.querySelector(
-                'input[name="bet"]:checked'
-            );
-
-            if (!selected) {
-                alert("かけるコインを選んでください。");
-                return;
-            }
-
-            if (selected.value === "other") {
-                const amount = Number(betOther.value);
-
-                if (
-                    !Number.isSafeInteger(amount) ||
-                    amount < 301
-                ) {
-                    alert("301以上の整数を入力してください。");
-                    betOther.focus();
-                    return;
-                }
-
-                bet = amount;
-            } else {
-                bet = Number(selected.value);
-            }
-
-            startGame();
-        });
-
-        // ===== スロットの準備 =====
-
-        function randInt(min, maxExclusive) {
-            return Math.floor(
-                Math.random() * (maxExclusive - min)
-            ) + min;
         }
-
-        function addFrame(steps, a, b, c) {
-            steps.push({
-                type: "frame",
-                a: a,
-                b: b,
-                c: c
-            });
+        // 画面切り替え時に最上部へスクロール
+        window.scrollTo(0, 0);
         }
-
-        function addMessage(steps, text) {
-            steps.push({
-                type: "message",
-                text: text
-            });
-        }
-
-        function addChance(steps, text) {
-            steps.push({
-                type: "chance",
-                text: text
-            });
-        }
-
-        function buildSteps() {
-            const steps = [];
-
-            let a;
-            let b;
-            let c;
-
-            let spins = 0;
-            let chanceUsed = false;
-
-            // 基本5回。ゾロ目のチャンスが発生した場合は、
-            // 追加の2回を含めてゲームを終了する。
-            while (spins < 5) {
-                a = randInt(5, 9);
-                b = randInt(5, 9);
-                c = randInt(5, 9);
-
-                addFrame(steps, a, b, c);
-                spins++;
-
-                const isTriple = a === b && b === c;
-                const isJackpot = isTriple && a === 7;
-
-                if (isJackpot) {
-                    addChance(steps, "777おめでとう!!");
-                    break;
-                }
-
-                if (isTriple && !chanceUsed) {
-                    chanceUsed = true;
-
-                    addChance(steps, "チャンス開始！");
-                    addChance(steps, "777を狙え！");
-                    addChance(
-                        steps,
-                        "チャンス！7になる確率が1/2にアップ！"
-                    );
-
-                    // チャンスでは必ず同じ数字が出る。
-                    // 6か7を選ぶことで、7の確率は1/2。
-                    for (let i = 0; i < 2; i++) {
-                        a = randInt(6, 8);
-                        b = a;
-                        c = a;
-
-                        addFrame(steps, a, b, c);
-                    }
-
-                    break;
-                }
-
-                if (spins < 5) {
-                    addMessage(steps, "もう一回遊べるドン！");
-                }
-            }
-
-            addMessage(steps, "また遊びにきてね♩");
-
-            return steps;
-        }
-
-        // ===== スロット画面 =====
-
-        const gameScreen = document.getElementById("game-screen");
-        const numA = document.getElementById("num-a");
-        const numB = document.getElementById("num-b");
-        const numC = document.getElementById("num-c");
-        const chanceArea = document.getElementById("chance-area");
-
-        let steps = [];
-        let index = 0;
-        let busy = false;
-        let gameId = 0;
-
-        function startGame() {
-            // 前のゲームのタイマーが残っていても、
-            // 新しいゲームに干渉しないようにする。
-            gameId++;
-
-            steps = buildSteps();
-            index = 0;
-            busy = false;
-
-            numA.textContent = "-";
-            numB.textContent = "-";
-            numC.textContent = "-";
-
-            chanceArea.textContent = "カードをクリックしてスタート";
-
-            showScreen("game");
-        }
-
-        // メッセージを自動表示する。
-        function autoNext(id) {
-            if (id !== gameId || index >= steps.length) return;
-
-            if (steps[index].type === "frame") return;
-
-            busy = true;
-
-            setTimeout(() => {
-                if (id !== gameId) return;
-
-                busy = false;
-                showStep();
-            }, AUTO_DELAY);
-        }
-
-        // 数字を順番に表示する。
-        function revealFrame(step, isLast, id) {
-            busy = true;
-            chanceArea.textContent = "";
-
-            numA.textContent = "-";
-            numB.textContent = "-";
-            numC.textContent = "-";
-
-            setTimeout(() => {
-                if (id !== gameId) return;
-                numA.textContent = step.a;
-            }, REVEAL_INTERVAL);
-
-            setTimeout(() => {
-                if (id !== gameId) return;
-                numB.textContent = step.b;
-            }, REVEAL_INTERVAL * 2);
-
-            setTimeout(() => {
-                if (id !== gameId) return;
-
-                numC.textContent = step.c;
-
-                busy = false;
-
-                if (!isLast) {
-                    autoNext(id);
-                }
-            }, REVEAL_INTERVAL * 3);
-        }
-
-        function showStep() {
-            if (busy || index >= steps.length) return;
-
-            const id = gameId;
-            const step = steps[index];
-
-            index++;
-
-            const isLast = index >= steps.length;
-
-            if (step.type === "frame") {
-                revealFrame(step, isLast, id);
-            } else {
-                chanceArea.textContent = step.text;
-
-                if (isLast) {
-                    busy = true;
-
-                    setTimeout(() => {
-                        if (id !== gameId) return;
-                        showResult();
-                    }, NEXT_DELAY);
-                } else {
-                    autoNext(id);
-                }
-            }
-        }
-
-        gameScreen.addEventListener("click", showStep);
-
-        // ===== 獲得コイン =====
-
-        function showResult() {
-            const last = [...steps]
-                .reverse()
-                .find((step) => step.type === "frame");
-
-            if (!last) {
-                alert("数字が見つかりません。もう一度やり直してください。");
-                showScreen("rules");
-                return;
-            }
-
-            let multiplier;
-
-            const isTriple =
-                last.a === last.b &&
-                last.b === last.c;
-
-            if (last.a === 7 && last.b === 7 && last.c === 7) {
-                multiplier = MULTIPLIER.jackpot;
-            } else if (isTriple) {
-                multiplier = MULTIPLIER.other_zorome;
-            } else {
-                multiplier = MULTIPLIER.other;
-            }
-
-            const coins = bet * multiplier;
-
-            document.getElementById("res-bet").textContent = bet;
-            document.getElementById("res-numbers").textContent =
-                `${last.a} ${last.b} ${last.c}`;
-
-            document.getElementById("res-multiplier").textContent =
-                multiplier;
-
-            document.getElementById("res-coins").textContent =
-                coins;
-
-            busy = true;
-            showScreen("result");
-        }
-
-        // ===== トップに戻る =====
-
-        document.getElementById("back-button").addEventListener(
-            "click",
-            () => {
-                gameId++;
-                steps = [];
-                index = 0;
-                busy = false;
-                bet = 0;
-
-                betForm.reset();
-                betOther.disabled = true;
-                betOther.required = false;
-                betOther.value = "";
-
-                showScreen("rules");
-            }
-        );
-
-        // ===== 管理者ログイン =====
-
-        document.getElementById("loginForm").addEventListener(
-            "submit",
-            (event) => {
-                event.preventDefault();
-
-                const password =
-                    document.getElementById("passwordInput").value;
-
-                const statusMessage =
-                    document.getElementById("statusMessage");
-
-                if (password === ADMIN_PASSWORD) {
-                    document.getElementById("passwordInput").value = "";
-                    statusMessage.textContent = "";
-                    showScreen("admin");
-                } else {
-                    statusMessage.textContent =
-                        "パスワードが違います！";
-
-                    statusMessage.style.color = "yellow";
-                }
-            }
-        );
-
-        adminOpen.addEventListener("click", () => {
-            previousScreen = currentScreen;
-            document.getElementById("statusMessage").textContent = "";
-            showScreen("password");
-        });
-
-        document.getElementById("admin-back").addEventListener(
-            "click",
-            () => {
-                showScreen(previousScreen);
-            }
-        );
-
-        document.getElementById("password-back").addEventListener(
-            "click",
-            () => {
-                document.getElementById("passwordInput").value = "";
-                document.getElementById("statusMessage").textContent = "";
-                showScreen(previousScreen);
-            }
-        );
-    </script>
-
-</body>
-</html>
+  </script>
