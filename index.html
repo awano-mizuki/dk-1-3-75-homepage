@@ -242,7 +242,10 @@
       margin-top: 8px;
       color: #e0c47c;
     }
-    
+    .mini-game {
+      color: #e0c47c;
+      text-decoration: none;
+    }
     /* ===== スマートフォン対応 ===== */
     @media (max-width: 480px) {
       header {
@@ -340,16 +343,21 @@
     <h2>競馬班 メンバー</h2>
     <ul class="member-list">
       <li class="group-title">男子</li>
-      <li>メンバー1</li>
-      <li>メンバー2</li>
-      <li>メンバー3</li>
-      <li>メンバー4</li>
+      <li>赤堀くん</li>
+      <li>安藤くん</li>
+      <li>土井くん</li>
+      <li>中田くん</li>
       <li class="group-title">女子</li>
-      <li>メンバー5</li>
-      <li>メンバー6</li>
-      <li>メンバー7</li>
-      <li>メンバー8</li>
+      <li>川村さん</li>
+      <li>里村さん</li>
+      <li>西尾さん</li>
+      <li>牧田さん</li>
     </ul>
+    <p class="mini-game">
+      <a href="horse.html">
+        <button class="btn-back">ミニゲームをする！</button>
+      </a>
+    </p>
     <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
   </section>
 
@@ -358,16 +366,21 @@
     <h2>ダーツ班 メンバー</h2>
     <ul class="member-list">
         <li class="group-title">男子</li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>佐々木くん</li>
+        <li>樋口くん</li>
+        <li>向井くん</li>
+        <li>綿口くん</li>
         <li class="group-title">女子</li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>江村さん</li>
+        <li>高橋さん</li>
+        <li>濵田さん</li>
+        <li>安田さん</li>
     </ul>
+    <p>
+      <a href="darts.html">
+          <button class="btn-back">ミニゲームをする！</button>
+      </a>
+    </p>
     <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
   </section>
 
@@ -376,19 +389,23 @@
     <h2>スロット班 メンバー</h2>
     <ul class="member-list">
         <li class="group-title">男子</li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>班長: 田付</li>
+        <li>私(粟野)</li>
+        <li>岡田くん</li>
+        <li>奥山くん</li>
+        <li>坪田くん</li>
         <li class="group-title">女子</li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>青井さん</li>
+        <li>ブーさん</li>
+        <li>松尾さん</li>
+        <li>八木さん</li>
+        <li>山内さん</li>
     </ul>
+    <p>
+      <a href="slot.html">
+          <button class="btn-back">ミニゲームをする！</button>
+      </a>
+    </p>
     <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
   </section>
 
@@ -397,16 +414,21 @@
     <h2>ルーレット班 メンバー</h2>
     <ul class="member-list">
         <li class="group-title">男子</li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>杉山くん</li>
+        <li>直くん</li>
+        <li>畑中くん</li>
+        <li>山岡くん</li>
         <li class="group-title">女子</li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>川本さん</li>
+        <li>小林さん</li>
+        <li>森さん(委員長)</li>
+        <li>山口さん</li>
     </ul>
+    <p class="mini-game">
+      <a href="rulets.html">
+        <button class="btn-back">ミニゲームをする！</button>
+      </a>
+    </p>
     <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
   </section>
 
@@ -415,24 +437,27 @@
     <h2>半か丁班 メンバー</h2>
     <ul class="member-list">
         <li class="group-title">男子</li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>班長: 中田くん</li>
+        <li>末松くん</li>
+        <li>森田くん</li>
         <li class="group-title">女子</li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li>織戸さん</li>
+        <li>堀さん</li>
     </ul>
+    <p class="mini-game">
+      <a href="odd_or_even.html">
+        <button class="btn-back">ミニゲームをする！</button>
+      </a>
+    </p>
     <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
   </section>
 
   <!-- フッター -->
   <footer>
     <div>75年度 DK1-3 CASINO</div>
+    <div class="author">間違っている情報があるかもしれません。間違っていた場合はとても深く謝罪します。すいません</div>
     <div class="author">その他、広報や内装、外装を手伝ってくれた皆さん。ありがとうございました。</div>
-    <div class="author">Present By: スロット班の粟野(文章案), 無料版ChatGPT(デザイン案), 無料版Gemini(スクリプト案)</div>
+    <div class="author">Present By: スロット班の粟野(HTML・スロットミニゲーム案), 無料版ChatGPT(CSS・ミニゲーム全体(スロットを除く)案), 無料版Gemini(JS案)</div>
   </footer>
 
   <script>
