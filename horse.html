@@ -1,0 +1,770 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DERBY DASH｜競馬風レースゲーム</title>
+
+<style>
+:root {
+  --gold: #f6cf67;
+  --cream: #fff4d4;
+  --green: #073c2d;
+  --deep: #061f19;
+  --red: #e84b4b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--cream);
+  font-family: system-ui, -apple-system,
+    "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  background: radial-gradient(
+    ellipse at top,
+    #176448 0,
+    #092c22 50%,
+    #041711 100%
+  );
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  padding: 25px 15px 12px;
+}
+
+.kicker {
+  letter-spacing: .35em;
+  font-size: .75rem;
+  color: var(--gold);
+  font-weight: 800;
+}
+
+h1 {
+  margin: 5px 0;
+  font-family: Georgia, serif;
+  font-size: clamp(2.2rem, 7vw, 4.5rem);
+  letter-spacing: .06em;
+  color: var(--gold);
+  text-shadow: 0 4px 0 #704b16, 0 8px 22px #0008;
+}
+
+.subtitle {
+  margin: 0;
+  color: #c4dfd1;
+}
+
+main {
+  width: min(1000px, 94vw);
+  margin: 0 auto 36px;
+}
+
+.panel {
+  background: #061b16d9;
+  border: 1px solid #c9a94c66;
+  border-radius: 18px;
+  padding: 18px;
+  margin: 14px 0;
+  box-shadow: 0 14px 35px #0003;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 13px;
+  color: var(--gold);
+  font-size: 1.1rem;
+}
+
+.section-title:after {
+  content: "";
+  height: 1px;
+  background: #c9a94c55;
+  flex: 1;
+}
+
+.horses {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(210px, 1fr)
+  );
+  gap: 10px;
+}
+
+.horse {
+  border: 1px solid #c1a75a55;
+  border-radius: 12px;
+  padding: 12px;
+  background: #ffffff08;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.silk {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: white;
+  font-weight: 900;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 2px #fff5;
+}
+
+.horse-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.horse-name {
+  font-weight: 800;
+}
+
+.horse-meta {
+  font-size: .8rem;
+  color: #b8d2c6;
+  margin-top: 2px;
+}
+
+.odds {
+  color: var(--gold);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+button, select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 17px;
+  font-weight: 850;
+  cursor: pointer;
+  transition: transform .12s, filter .12s;
+}
+
+button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.primary {
+  background: linear-gradient(135deg, #ffe69a, #d7a83c);
+  color: #2b2108;
+  box-shadow: 0 4px 0 #88651e;
+}
+
+.secondary {
+  background: #174a38;
+  color: var(--cream);
+  border: 1px solid #5b9278;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+select {
+  background: #092d22;
+  color: var(--cream);
+  border: 1px solid #6a9c7e;
+  border-radius: 9px;
+  padding: 10px;
+  max-width: 100%;
+}
+
+.bet-line {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.bet-line label {
+  color: #c4dfd1;
+  font-size: .9rem;
+}
+
+.track-wrap {
+  overflow: hidden;
+  border-radius: 14px;
+  border: 2px solid #d7bb63;
+  background: #e8dfbd;
+}
+
+.track-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f4edda;
+  color: #344b36;
+  font-size: .75rem;
+  font-weight: 900;
+}
+
+.track {
+  position: relative;
+  padding: 7px 0;
+  background: repeating-linear-gradient(
+    0deg,
+    #e8dfbd 0px,
+    #e8dfbd 43px,
+    #cfc49e 44px,
+    #cfc49e 45px
+  );
+}
+
+.lane {
+  height: 44px;
+  position: relative;
+  border-bottom: 1px dashed #b5a77d;
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+}
+
+.lane:last-child {
+  border-bottom: 0;
+}
+
+.lane-no {
+  position: absolute;
+  left: 6px;
+  z-index: 2;
+  color: #5e654e;
+  font-size: .7rem;
+  font-weight: 900;
+}
+
+.runner {
+  position: absolute;
+  left: 4%;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  z-index: 3;
+  transition: left .18s linear;
+  font-size: 1.45rem;
+  filter: drop-shadow(0 2px 1px #4b4528);
+}
+
+.runner .jockey {
+  font-size: .65rem;
+  background: #fff7d7;
+  color: #173b2c;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-weight: 900;
+}
+
+.finish {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 7%;
+  width: 5px;
+  background: repeating-linear-gradient(
+    0deg,
+    #1c1c1c 0 6px,
+    #fff 6px 12px
+  );
+  opacity: .85;
+}
+
+.finish-label {
+  position: absolute;
+  right: 1%;
+  top: 4px;
+  color: #5b543e;
+  font-size: .6rem;
+  writing-mode: vertical-rl;
+  font-weight: 900;
+}
+
+.status {
+  text-align: center;
+  font-weight: 850;
+  color: var(--gold);
+  min-height: 27px;
+  margin: 12px 0 0;
+}
+
+.result {
+  display: none;
+  text-align: center;
+  padding: 14px;
+  background: #0d392a;
+  border-radius: 12px;
+  margin-top: 14px;
+  border: 1px solid #d3b65a66;
+}
+
+.result.show {
+  display: block;
+}
+
+.winner {
+  font-size: 1.5rem;
+  color: var(--gold);
+  font-weight: 900;
+}
+
+.small {
+  font-size: .82rem;
+  color: #b9d0c5;
+  line-height: 1.6;
+}
+
+footer {
+  text-align: center;
+  color: #9ab7a9;
+  font-size: .75rem;
+  padding: 0 10px 24px;
+}
+.btn-back {
+      text-align: center;
+      display: inline-block;
+      margin-top: 40px;
+      padding: 10px 24px;
+      border: 1px solid #c7a04b;
+      color: #ffe4a0;
+      text-decoration: none;
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+@media (max-width: 520px) {
+  .panel {
+    padding: 13px;
+  }
+
+  .horse {
+    padding: 9px;
+  }
+
+  .controls button {
+    flex: 1;
+  }
+
+  .lane {
+    height: 40px;
+  }
+
+  .track {
+    background: repeating-linear-gradient(
+      0deg,
+      #e8dfbd 0px,
+      #e8dfbd 39px,
+      #cfc49e 40px,
+      #cfc49e 41px
+    );
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="kicker">
+    THE GRAND TURF • ARCADE RACE
+  </div>
+  <h1>DERBY DASH</h1>
+  <p class="subtitle">
+    予想して、ゲートイン！ きみの本命は勝てるか？
+  </p>
+</header>
+
+<main>
+
+  <section class="panel">
+    <h2 class="section-title">🏇 出走表</h2>
+    <div id="horses" class="horses"></div>
+  </section>
+
+  <section class="panel">
+    <h2 class="section-title">🎟️ レース予想</h2>
+
+    <div class="bet-line">
+      <label for="pick">本命の馬</label>
+      <select id="pick"></select>
+
+      <label for="stake">ポイント</label>
+      <select id="stake">
+        <option value="10">10 pt</option>
+        <option value="20" selected>20 pt</option>
+        <option value="50">50 pt</option>
+      </select>
+
+      <span>
+        所持ポイント：
+        <strong id="bank" style="color:var(--gold)">100</strong>
+        pt
+      </span>
+    </div>
+
+    <p class="small">
+      ※ゲーム内ポイントだけを使う、架空の競馬風ゲームです。
+      現実のお金は使いません。
+    </p>
+
+    <div class="controls">
+      <button class="primary" id="start">
+        ▶ レース開始
+      </button>
+      <button class="secondary" id="reset">
+        ↻ 最初から
+      </button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="section-title">🏁 TURF COURSE</h2>
+
+    <div class="track-wrap">
+      <div class="track-head">
+        <span>START ━━━━━━━━━━━━━━━━━━━━━</span>
+        <span>芝 1,200m</span>
+      </div>
+
+      <div class="track" id="track">
+        <div class="finish"></div>
+        <div class="finish-label">FINISH</div>
+      </div>
+    </div>
+
+    <div id="status" class="status">
+      出走馬を選んで「レース開始」を押そう！
+    </div>
+
+    <div id="result" class="result"></div>
+  </section>
+  <a href="index.html">
+    <button class="btn-back">ホームに戻る</button>
+  </a>
+</main>
+
+<footer>
+  DERBY DASH • 架空の馬とオッズで遊ぶミニゲーム
+</footer>
+
+<script>
+const baseHorses = [
+  {
+    name: "ゴールドスパーク",
+    color: "#d94b45",
+    number: 1,
+    odds: 2.4,
+    emoji: "🐎"
+  },
+  {
+    name: "ミッドナイト",
+    color: "#3156b5",
+    number: 2,
+    odds: 3.2,
+    emoji: "🐎"
+  },
+  {
+    name: "サクラブレイズ",
+    color: "#e49a2f",
+    number: 3,
+    odds: 4.8,
+    emoji: "🐎"
+  },
+  {
+    name: "グリーンファング",
+    color: "#27845c",
+    number: 4,
+    odds: 6.5,
+    emoji: "🐎"
+  },
+  {
+    name: "ブルームーン",
+    color: "#8c57ba",
+    number: 5,
+    odds: 8.2,
+    emoji: "🐎"
+  },
+  {
+    name: "ラッキーコメット",
+    color: "#c65c9c",
+    number: 6,
+    odds: 12.0,
+    emoji: "🐎"
+  }
+];
+
+let horses = [];
+let bank = 100;
+let racing = false;
+let raceTimer = null;
+
+const $ = id => document.getElementById(id);
+
+function freshHorses() {
+  return baseHorses.map(h => ({
+    ...h,
+    pos: 0,
+    speed: 0,
+    finished: false
+  }));
+}
+
+function renderHorses() {
+  $("horses").innerHTML = horses.map(h => `
+    <div class="horse">
+      <div class="silk" style="background:${h.color}">
+        ${h.number}
+      </div>
+
+      <div class="horse-info">
+        <div class="horse-name">${h.name}</div>
+        <div class="horse-meta">
+          枠番 ${h.number} • 芝のスプリンター
+        </div>
+      </div>
+
+      <div class="odds">
+        ${h.odds.toFixed(1)}倍
+      </div>
+    </div>
+  `).join("");
+
+  $("pick").innerHTML = horses.map(h => `
+    <option value="${h.number}">
+      ${h.number}番 ${h.name}（${h.odds.toFixed(1)}倍）
+    </option>
+  `).join("");
+}
+
+function renderTrack() {
+  $("track").querySelectorAll(".lane").forEach(e => e.remove());
+
+  horses.forEach(h => {
+    const lane = document.createElement("div");
+    lane.className = "lane";
+
+    lane.innerHTML = `
+      <span class="lane-no">${h.number}</span>
+
+      <div
+        class="runner"
+        id="runner-${h.number}"
+        style="left:${4 + h.pos * 0.89}%;"
+      >
+        <span>${h.emoji}</span>
+        <span class="jockey">${h.number}</span>
+      </div>
+    `;
+
+    $("track").appendChild(lane);
+  });
+}
+
+function updateBank() {
+  $("bank").textContent = bank;
+}
+
+function startRace() {
+  if (racing) return;
+
+  const stake = Number($("stake").value);
+  const selected = Number($("pick").value);
+
+  if (bank < stake) {
+    $("status").textContent =
+      "ポイントが足りないよ。「最初から」で再スタート！";
+    return;
+  }
+
+  bank -= stake;
+  updateBank();
+
+  racing = true;
+
+  $("start").disabled = true;
+  $("reset").disabled = true;
+  $("pick").disabled = true;
+  $("stake").disabled = true;
+
+  $("result").className = "result";
+  $("result").innerHTML = "";
+
+  $("status").textContent =
+    "ゲートイン！ 各馬いっせいにスタート！";
+
+  horses.forEach(h => {
+    h.pos = 0;
+    h.speed = 0.45 + Math.random() * 0.42;
+    h.finished = false;
+  });
+
+  renderTrack();
+
+  let ticks = 0;
+
+  raceTimer = setInterval(() => {
+    ticks++;
+
+    horses.forEach(h => {
+      if (!h.finished) {
+        h.speed += (Math.random() - 0.47) * 0.13;
+
+        h.speed = Math.max(
+          0.22,
+          Math.min(0.88, h.speed)
+        );
+
+        h.pos = Math.min(
+          100,
+          h.pos + h.speed * (0.65 + Math.random() * 0.75)
+        );
+
+        if (h.pos >= 100) {
+          h.finished = true;
+        }
+
+        const runner = $("runner-" + h.number);
+
+        if (runner) {
+          runner.style.left = (4 + h.pos * 0.89) + "%";
+        }
+      }
+    });
+
+    const sorted = [...horses].sort(
+      (a, b) => b.pos - a.pos
+    );
+
+    const leader = sorted[0];
+
+    $("status").textContent =
+      `先頭は ${leader.name}！ ` +
+      `${Math.min(99, Math.floor(leader.pos))}% 地点を通過！`;
+
+    if (horses.some(h => h.finished) || ticks > 220) {
+      clearInterval(raceTimer);
+      racing = false;
+
+      horses.forEach(h => {
+        if (!h.finished) {
+          h.pos = 100;
+        }
+      });
+
+      renderTrack();
+
+      const order = [...horses].sort(
+        (a, b) => b.pos - a.pos
+      );
+
+      const winner = order[0];
+      const won = winner.number === selected;
+
+      const payout = won
+        ? Math.floor(stake * winner.odds)
+        : 0;
+
+      if (won) {
+        bank += payout;
+      }
+
+      updateBank();
+
+      $("status").textContent =
+        "ゴール！ レース結果が確定しました。";
+
+      $("result").className = "result show";
+
+      $("result").innerHTML = `
+        <div class="small">1着</div>
+
+        <div class="winner">
+          🏆 ${winner.name}
+        </div>
+
+        <p>
+          ${order.slice(0, 3).map((h, i) =>
+            `${i + 1}着：${h.name}`
+          ).join("<br>")}
+        </p>
+
+        <strong>
+          ${
+            won
+              ? `的中！ ${payout} pt を獲得！`
+              : `はずれ… ${stake} pt を使用しました。`
+          }
+        </strong>
+
+        <p class="small">
+          次のレースも挑戦してみよう！
+        </p>
+      `;
+
+      $("start").disabled = false;
+      $("reset").disabled = false;
+      $("pick").disabled = false;
+      $("stake").disabled = false;
+
+      $("start").textContent = "▶ 次のレース";
+    }
+  }, 180);
+}
+
+function resetGame() {
+  clearInterval(raceTimer);
+
+  racing = false;
+  bank = 100;
+  horses = freshHorses();
+
+  $("start").disabled = false;
+  $("reset").disabled = false;
+  $("pick").disabled = false;
+  $("stake").disabled = false;
+
+  $("start").textContent = "▶ レース開始";
+
+  $("status").textContent =
+    "出走馬を選んで「レース開始」を押そう！";
+
+  $("result").className = "result";
+  $("result").innerHTML = "";
+
+  updateBank();
+  renderHorses();
+  renderTrack();
+}
+
+$("start").addEventListener("click", startRace);
+$("reset").addEventListener("click", resetGame);
+
+resetGame();
+</script>
+
+</body>
+</html>
