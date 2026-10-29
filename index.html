@@ -274,6 +274,118 @@
         transition: none !important;
       }
     }
+
+
+    /* ===== 心構えアンケート ===== */
+    .mindset {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 35px 24px 75px;
+        text-align: center;
+    }
+
+    .mindset-label {
+        font-family: Georgia, serif;
+        color: #bca36b;
+        font-size: 12px;
+        letter-spacing: 5px;
+        margin-bottom: 12px;
+    }
+
+    .mindset h2 {
+        color: #e8c66a;
+        font-size: 28px;
+        font-weight: normal;
+        letter-spacing: 3px;
+        margin-bottom: 12px;
+    }
+
+    .mindset-intro {
+        color: #a99d8a;
+        font-size: 13px;
+        margin-bottom: 30px;
+    }
+
+    .mindset-card {
+        padding: 38px 24px;
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+
+        background: linear-gradient(135deg, #292019, #171311);
+        border: 1px solid #70552a;
+        border-radius: 12px;
+
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    .mindset-number {
+        font-family: Georgia, serif;
+        color: #bca36b;
+        font-size: 11px;
+        letter-spacing: 3px;
+    }
+
+    .mindset-card h3 {
+        color: #fff0b0;
+        font-size: clamp(22px, 4vw, 32px);
+        font-weight: normal;
+        letter-spacing: 2px;
+    }
+
+    .mindset-card > p:not(.mindset-number) {
+        color: #e0d7c8;
+        font-size: 14px;
+        line-height: 2;
+    }
+
+    .mindset-dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 5px;
+    }
+
+    .mindset-dot {
+        width: 7px;
+        height: 7px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: #66543a;
+        cursor: pointer;
+    }
+
+    .mindset-dot.active {
+        width: 22px;
+        border-radius: 10px;
+        background: #e8c66a;
+    }
+
+    .mindset-card.changing {
+        animation: mindsetFade 0.45s ease;
+    }
+
+    @keyframes mindsetFade {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .mindset-card.changing {
+            animation: none;
+        }
+    }
+
   </style>
 </head>
 <body>
@@ -452,6 +564,29 @@
     <button class="btn-back" onclick="showScreen('home')">ホームに戻る</button>
   </section>
 
+  <!-- 心構え集 -->
+  <section class="mindset">
+      <p class="mindset-label">OUR ARTISAN · DK1-3</p>
+      <h2>我々三組の匠から</h2>
+      <p class="mindset-intro">
+          私たちが文化祭にかける思い。
+      </p>
+
+      <div class="mindset-card" id="mindsetCard">
+          <p class="mindset-number" id="mindsetNumber">
+              MESSAGE 01
+          </p>
+
+          <h3 id="mindsetTitle">馬力強い馬になったように、走り、まさに死ぬかの生きるかの戦いでした。ハシからハシまでハシり切ったような、いい気分です。とても今日は緊張しています。</h3>
+
+          <p id="mindsetText">
+              競馬班:Aさんから
+          </p>
+
+          <div class="mindset-dots" id="mindsetDots"></div>
+      </div>
+  </section>
+
   <!-- フッター -->
   <footer>
     <div>75年度 DK1-3 CASINO</div>
@@ -485,4 +620,133 @@
         // 画面切り替え時に最上部へスクロール
         window.scrollTo(0, 0);
         }
+    // ここにアンケートの回答を入れる
+    const mindsetMessages = [
+        {
+            title: "馬力強い馬になったように、走り、まさに死ぬかの生きるかの戦いでした。ハシからハシまでハシり切ったような、いい気分です。とても今日は緊張しています。",
+            text: "競馬班:Aくんから"
+        },
+        {
+            title: "う、うお。お、おう。",
+            text: "競馬班:Aくんから"
+        },
+        {
+            title: "作るのが大変でした。",
+            text: "スロット班:Oくんから"
+        },
+        {
+            title: "命令してくる奴がいたけど、しばらく経つと、「青春だったなぁ」と思えるような思い出にしたい。",
+            text: "ワi...スロット班:粟野くんから"
+        },
+        {
+            title: "目指せ二時間待ち!!!!",
+            text: "スロット班:Oくんから"
+        },
+        {
+            title: "まぁ、俺たちスロット班だけで、二時間待ち？いや、七時間待ちはできるね。",
+            text: "スロット班 班長から"
+        },
+        {
+            title: "Hakuna,Matata.What a wonderful phrase! this two word all your probrem!",
+            text: "ダーツ班:Wくんから"
+        },
+        {
+            title: "左足捻挫したけど、頑張る",
+            text: "ダーツ班:Sくんから"
+        },
+        {
+            title: "俺！二時間待ち！",
+            text: "生物部:Sくんから"
+        },
+        {
+            title: "俺って天才かも",
+            text: "半か丁班:Mくんから"
+        },
+        {
+            title: "クルンテープ・マハーナコーン・アモーンラッタナコーシン・マヒンタラーユッタヤー・マハーディロック・ポップ・ノッパラット・ラーチャタニーブリーロム・ウドムラーチャニウェートマハーサターン・アモーンピマーン・アワターンサティット・サッカタッティヤウィサヌカムプラシット",
+            text: "半か丁班:バンコクさんこと、Oさん"
+        },
+        {
+            title: "まあ、私たちが作ったルーレットは本格的なものです。是非一年三組までお越しください。",
+            text: "ルーレット班:Hくん"
+        },
+        {
+            title: "人間の本能をくすぐすギャンブル性をしているので楽しんでね🎶",
+            text: "ルーレット班:Tくん"
+        },
+        {
+            title: "全ロスしろ",
+            text: "ルーレット班:Sくん"
+        },
+    ];
+
+    const card = document.getElementById("mindsetCard");
+    const number = document.getElementById("mindsetNumber");
+    const title = document.getElementById("mindsetTitle");
+    const message = document.getElementById("mindsetText");
+    const dots = document.getElementById("mindsetDots");
+
+    let currentIndex = 0;
+    let autoSlide;
+
+    function showMindset(index) {
+        currentIndex = index;
+
+        const item = mindsetMessages[currentIndex];
+
+        number.textContent =
+            `MESSAGE ${String(currentIndex + 1).padStart(2, "0")} / ${String(mindsetMessages.length).padStart(2, "0")}`;
+
+        title.textContent = item.title;
+        message.textContent = item.text;
+
+        card.classList.remove("changing");
+
+        // アニメーションを再スタート
+        void card.offsetWidth;
+        card.classList.add("changing");
+
+        dots.querySelectorAll(".mindset-dot").forEach((dot, i) => {
+            dot.classList.toggle("active", i === currentIndex);
+            dot.setAttribute("aria-pressed", String(i === currentIndex));
+        });
+    }
+
+    // 回答ごとのドットを作成
+    mindsetMessages.forEach((item, index) => {
+        const dot = document.createElement("button");
+
+        dot.className = "mindset-dot";
+        dot.type = "button";
+        dot.setAttribute("aria-label", `回答 ${index + 1} を表示`);
+        dot.addEventListener("click", () => {
+            showMindset(index);
+            startAutoSlide();
+        });
+
+        dots.appendChild(dot);
+    });
+
+    function startAutoSlide() {
+        clearInterval(autoSlide);
+
+        autoSlide = setInterval(() => {
+            const nextIndex =
+                (currentIndex + 1) % mindsetMessages.length;
+
+            showMindset(nextIndex);
+        }, 4000);
+    }
+
+    showMindset(0);
+    startAutoSlide();
+
+    // タブを離れている間は自動切り替えを停止
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            clearInterval(autoSlide);
+        } else {
+            startAutoSlide();
+        }
+    });
   </script>
