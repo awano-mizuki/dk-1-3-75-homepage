@@ -1,0 +1,834 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROYAL DARTS｜ダーツゲーム</title>
+
+  <style>
+    :root {
+      --gold: #f4d27a;
+      --gold-dark: #b78b35;
+      --green: #075039;
+      --green-dark: #031f19;
+      --cream: #fff7df;
+      --red: #c83b42;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--cream);
+      font-family: Georgia, "Yu Mincho", "Hiragino Mincho ProN", serif;
+      background:
+        radial-gradient(
+          ellipse at top,
+          #17694b 0%,
+          #06412f 46%,
+          #021c16 100%
+        );
+    }
+
+    .table {
+      width: min(100%, 900px);
+      padding: clamp(18px, 4vw, 34px);
+      border: 3px solid var(--gold-dark);
+      border-radius: 22px;
+      background: linear-gradient(
+        145deg,
+        #06432ff5,
+        #02271ef7
+      );
+      box-shadow:
+        0 18px 50px #0008,
+        inset 0 0 0 5px #f4d27a18;
+    }
+
+    header {
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: .78rem;
+      letter-spacing: .32em;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(2.2rem, 7vw, 4rem);
+      letter-spacing: .1em;
+      text-shadow: 0 3px 0 #684719;
+    }
+
+    .subtitle {
+      color: #d9e8dc;
+      letter-spacing: .13em;
+      margin: 8px 0 20px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(250px, .9fr);
+      gap: 26px;
+      align-items: center;
+    }
+
+    .board-wrap {
+      width: 100%;
+      max-width: 490px;
+      margin: auto;
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 12px 18px #0007);
+    }
+
+    .panel {
+      border: 1px solid #b78b3577;
+      border-radius: 16px;
+      padding: 20px;
+      background: #001c1480;
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 1.3rem;
+    }
+
+    .score-label {
+      color: #c7d9cc;
+      font-size: .85rem;
+      letter-spacing: .1em;
+    }
+
+    .score {
+      font-size: clamp(3rem, 8vw, 4.4rem);
+      font-weight: bold;
+      line-height: 1.15;
+      color: var(--gold);
+      margin: 4px 0 15px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      padding: 10px;
+      border-radius: 10px;
+      background: #ffffff0b;
+      border: 1px solid #ffffff12;
+    }
+
+    .stat span {
+      display: block;
+      color: #c7d9cc;
+      font-size: .78rem;
+    }
+
+    .stat strong {
+      color: var(--cream);
+      font-size: 1.25rem;
+    }
+
+    .control-label {
+      display: block;
+      color: var(--gold);
+      font-size: .9rem;
+      margin: 14px 0 8px;
+    }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--gold-dark);
+      border-radius: 9px;
+      padding: 11px;
+      color: var(--cream);
+      background: #063c2b;
+      font: inherit;
+    }
+
+    .button {
+      width: 100%;
+      cursor: pointer;
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 18px;
+      font: bold 1rem Georgia, serif;
+      letter-spacing: .08em;
+      transition: transform .15s ease, filter .15s ease;
+    }
+
+    .button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .primary {
+      color: #2b1c06;
+      background: linear-gradient(180deg, #ffebaa, #d6a83f);
+      box-shadow: 0 5px 0 #8d6720;
+      margin-top: 18px;
+    }
+
+    .secondary {
+      color: var(--cream);
+      background: #174b3b;
+      border: 1px solid #b78b3588;
+      margin-top: 12px;
+    }
+
+    button:focus-visible,
+    select:focus-visible {
+      outline: 3px solid #fff2b9;
+      outline-offset: 3px;
+    }
+
+    .result {
+      min-height: 82px;
+      margin-top: 18px;
+      padding: 13px;
+      border-top: 1px solid #b78b3566;
+      border-bottom: 1px solid #b78b3566;
+    }
+
+    .result strong {
+      display: block;
+      color: var(--gold);
+      font-size: 1.35rem;
+      margin-bottom: 4px;
+    }
+
+    .result p {
+      margin: 0;
+      color: #e1e9df;
+      line-height: 1.5;
+      font-size: .92rem;
+    }
+
+    .history {
+      margin-top: 24px;
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: #001c1480;
+    }
+
+    .history h3 {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: 1rem;
+    }
+
+    #historyList {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 26px;
+    }
+
+    .history-item {
+      background: #f8efd8;
+      color: #173226;
+      border-radius: 7px;
+      padding: 5px 9px;
+      font: .86rem Arial, sans-serif;
+    }
+
+    .rules {
+      color: #b8d0c1;
+      font-size: .8rem;
+      line-height: 1.7;
+      text-align: center;
+      margin: 18px 0 0;
+    }
+
+    .btn-back {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 10px 24px;
+      border: 1px solid #c7a04b;
+      color: #ffe4a0;
+      text-decoration: none;
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 12px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .board-wrap {
+        max-width: 390px;
+      }
+
+      .panel {
+        max-width: 500px;
+        width: 100%;
+        margin: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="table">
+    <header>
+      <div class="eyebrow">THE ROYAL GAME ROOM</div>
+      <h1>ROYAL DARTS</h1>
+      <p class="subtitle">AIM · THROW · SCORE</p>
+    </header>
+
+    <div class="layout">
+      <!-- ダーツボード -->
+      <section class="board-wrap" aria-label="ダーツボード">
+        <canvas id="dartboard" width="600" height="600">
+          ダーツボードを表示できません。
+        </canvas>
+      </section>
+
+      <!-- スコアと操作 -->
+      <section class="panel">
+        <h2>PLAYER 1</h2>
+
+        <div class="score-label">TOTAL SCORE</div>
+        <div class="score" id="score">0</div>
+
+        <div class="stats">
+          <div class="stat">
+            <span>投げた本数</span>
+            <strong id="throws">0 / 9</strong>
+          </div>
+
+          <div class="stat">
+            <span>平均点</span>
+            <strong id="average">—</strong>
+          </div>
+
+          <div class="stat">
+            <span>最高得点</span>
+            <strong id="best">0</strong>
+          </div>
+
+          <div class="stat">
+            <span>残り本数</span>
+            <strong id="remaining">9</strong>
+          </div>
+        </div>
+
+        <label class="control-label" for="aim">狙い方</label>
+
+        <select id="aim">
+          <option value="steady">安定狙い（当たりやすい）</option>
+          <option value="normal" selected>通常狙い</option>
+          <option value="risky">高得点狙い（ブレやすい）</option>
+        </select>
+
+        <button class="button primary" id="throwButton" type="button">
+          ダーツを投げる
+        </button>
+
+        <button class="button secondary" id="resetButton" type="button">
+          もう一度プレイ
+        </button>
+
+        <div class="result" aria-live="polite">
+          <strong id="resultTitle">準備OK！</strong>
+          <p id="resultText">
+            狙い方を選んで、ダーツを投げよう。
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- 投げた結果の記録 -->
+    <section class="history">
+      <h3>今回のスロー記録</h3>
+
+      <div id="historyList">
+        <span class="history-item">まだ投げていません</span>
+      </div>
+    </section>
+    
+    <p class="rules">
+      9本投げた合計点で勝負するシンプルなダーツゲーム。<br>
+      盤面の数字と色付きリングに応じて得点が変わるよ。
+      ゲーム内スコアのみで遊べます。
+    </p>
+    <p>
+        <a href="index.html">
+            <button class="btn-back">ホームに戻る</button>
+        </a>
+    </p>
+  </main>
+
+  <script>
+    // ===== HTMLの要素を取得 =====
+
+    const canvas = document.getElementById("dartboard");
+    const ctx = canvas.getContext("2d");
+
+    const scoreDisplay = document.getElementById("score");
+    const throwsDisplay = document.getElementById("throws");
+    const averageDisplay = document.getElementById("average");
+    const bestDisplay = document.getElementById("best");
+    const remainingDisplay = document.getElementById("remaining");
+
+    const aimSelect = document.getElementById("aim");
+    const throwButton = document.getElementById("throwButton");
+    const resetButton = document.getElementById("resetButton");
+
+    const resultTitle = document.getElementById("resultTitle");
+    const resultText = document.getElementById("resultText");
+    const historyList = document.getElementById("historyList");
+
+    // ===== ダーツボードの設定 =====
+
+    // ダーツボードの数字の並び
+    const numbers = [
+      20, 1, 18, 4, 13,
+      6, 10, 15, 2, 17,
+      3, 19, 7, 16, 8,
+      11, 14, 9, 12, 5
+    ];
+
+    const boardCenter = {
+      x: 300,
+      y: 300
+    };
+
+    const outerRadius = 250;
+    const numberRadius = 270;
+    const sector = (Math.PI * 2) / 20;
+
+    const startAngle = -Math.PI / 2 - sector / 2;
+
+    // ===== ゲームの状態 =====
+
+    let totalScore = 0;
+    let throwCount = 0;
+    let scores = [];
+    let darts = [];
+    let busy = false;
+    let throwTimer = null;
+
+    // ===== ダーツボードを描く =====
+
+    function drawBoard() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 外側の木枠
+      ctx.beginPath();
+      ctx.arc(300, 300, 288, 0, Math.PI * 2);
+      ctx.fillStyle = "#6d451f";
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(300, 300, 276, 0, Math.PI * 2);
+      ctx.fillStyle = "#d5b06a";
+      ctx.fill();
+
+      // 20個のセクターを描く
+      for (let i = 0; i < 20; i++) {
+        const a0 = startAngle + i * sector;
+        const a1 = a0 + sector;
+
+        const baseColor =
+          i % 2 === 0 ? "#171b1a" : "#eee5d0";
+
+        const alternate =
+          i % 2 === 0 ? "#c9333c" : "#16774f";
+
+        // 外側シングル
+        drawSegment(
+          a0, a1, 235, outerRadius, baseColor
+        );
+
+        // トリプルリング
+        drawSegment(
+          a0, a1, 145, 160, alternate
+        );
+
+        // 内側シングル
+        drawSegment(
+          a0, a1, 35, 145, baseColor
+        );
+
+        // ダブルリング
+        drawSegment(
+          a0, a1, 220, 235, alternate
+        );
+      }
+
+      // アウターブル
+      ctx.beginPath();
+      ctx.arc(300, 300, 35, 0, Math.PI * 2);
+      ctx.fillStyle = "#168252";
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#d8c99f";
+      ctx.stroke();
+
+      // インナーブル
+      ctx.beginPath();
+      ctx.arc(300, 300, 16, 0, Math.PI * 2);
+      ctx.fillStyle = "#d63843";
+      ctx.fill();
+      ctx.strokeStyle = "#f8e9c9";
+      ctx.stroke();
+
+      // 数字を描く
+      ctx.fillStyle = "#fff3d0";
+      ctx.font = "bold 23px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      for (let i = 0; i < 20; i++) {
+        const angle = startAngle + (i + .5) * sector;
+
+        const x = 300 + Math.cos(angle) * numberRadius;
+        const y = 300 + Math.sin(angle) * numberRadius;
+
+        ctx.fillText(numbers[i], x, y);
+      }
+
+      // ボードの外周
+      ctx.beginPath();
+      ctx.arc(300, 300, outerRadius, 0, Math.PI * 2);
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = "#d8c99f";
+      ctx.stroke();
+
+      // すでに刺さったダーツを再描画
+      darts.forEach((dart, index) => {
+        drawDart(dart.x, dart.y, index);
+      });
+    }
+
+    // 扇形のリングを描く
+    function drawSegment(a0, a1, innerR, outerR, color) {
+      ctx.beginPath();
+
+      ctx.arc(300, 300, outerR, a0, a1);
+      ctx.arc(300, 300, innerR, a1, a0, true);
+
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#d9c99d";
+      ctx.stroke();
+    }
+
+    // ダーツを描く
+    function drawDart(x, y, index) {
+      const cx = 300;
+      const cy = 300;
+
+      const dx = cx - x;
+      const dy = cy - y;
+      const len = Math.hypot(dx, dy) || 1;
+
+      const ux = dx / len;
+      const uy = dy / len;
+
+      // 羽根
+      ctx.beginPath();
+
+      ctx.moveTo(
+        x - ux * 24 - uy * 7,
+        y - uy * 24 + ux * 7
+      );
+
+      ctx.lineTo(
+        x - ux * 7,
+        y - uy * 7
+      );
+
+      ctx.lineTo(
+        x - ux * 24 + uy * 7,
+        y - uy * 24 - ux * 7
+      );
+
+      ctx.closePath();
+
+      ctx.fillStyle = [
+        "#f4d27a",
+        "#e85c61",
+        "#64c9a0"
+      ][index % 3];
+
+      ctx.fill();
+
+      // 軸
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x - ux * 20, y - uy * 20);
+
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = "#f8edcf";
+      ctx.stroke();
+
+      // 先端
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = "#f4d27a";
+      ctx.fill();
+    }
+
+    // ===== 着弾地点から得点を計算 =====
+
+    function getScore(x, y) {
+      const dx = x - 300;
+      const dy = y - 300;
+
+      const radius = Math.hypot(dx, dy);
+
+      // ボードの外は0点
+      if (radius > outerRadius) {
+        return 0;
+      }
+
+      // インナーブルは50点
+      if (radius <= 16) {
+        return 50;
+      }
+
+      // アウターブルは25点
+      if (radius <= 35) {
+        return 25;
+      }
+
+      // 着弾地点の角度から数字を求める
+      const angle = Math.atan2(dy, dx);
+
+      let normalized = angle - startAngle;
+
+      while (normalized < 0) {
+        normalized += Math.PI * 2;
+      }
+
+      while (normalized >= Math.PI * 2) {
+        normalized -= Math.PI * 2;
+      }
+
+      const index = Math.floor(normalized / sector);
+      const base = numbers[index];
+
+      // ダブルリング
+      if (radius >= 220 && radius <= 235) {
+        return base * 2;
+      }
+
+      // トリプルリング
+      if (radius >= 145 && radius <= 160) {
+        return base * 3;
+      }
+
+      // 通常のシングル
+      return base;
+    }
+
+    // ===== ダーツの着弾地点をランダムに決める =====
+
+    function randomThrow() {
+      const aim = aimSelect.value;
+
+      let targetRadius;
+      let spread;
+
+      // 安定狙い
+      if (aim === "steady") {
+        targetRadius = 95;
+        spread = 65;
+      }
+
+      // 高得点狙い
+      else if (aim === "risky") {
+        targetRadius = 10;
+        spread = 115;
+      }
+
+      // 通常狙い
+      else {
+        targetRadius = 65;
+        spread = 90;
+      }
+
+      const angle = Math.random() * Math.PI * 2;
+
+      const radius = Math.abs(
+        targetRadius +
+        (Math.random() + Math.random() - 1) * spread
+      );
+
+      const x = 300 + Math.cos(angle) * radius;
+      const y = 300 + Math.sin(angle) * radius;
+
+      return {
+        x: x,
+        y: y,
+        score: getScore(x, y)
+      };
+    }
+
+    // ===== スコア表示を更新 =====
+
+    function updateStats() {
+      scoreDisplay.textContent = totalScore;
+
+      throwsDisplay.textContent = `${throwCount} / 9`;
+
+      remainingDisplay.textContent = 9 - throwCount;
+
+      averageDisplay.textContent = throwCount
+        ? (totalScore / throwCount).toFixed(1)
+        : "—";
+
+      bestDisplay.textContent = scores.length
+        ? Math.max(...scores)
+        : 0;
+    }
+
+    // ===== 投げた結果を記録 =====
+
+    function addHistory(score, index) {
+      const empty = historyList.querySelector(".history-item");
+
+      if (empty && empty.textContent === "まだ投げていません") {
+        historyList.innerHTML = "";
+      }
+
+      const item = document.createElement("span");
+
+      item.className = "history-item";
+      item.textContent = `${index}本目：${score}点`;
+
+      historyList.prepend(item);
+    }
+
+    // ===== ダーツを投げる =====
+
+    function throwDart() {
+      if (busy || throwCount >= 9) {
+        return;
+      }
+
+      busy = true;
+      throwButton.disabled = true;
+
+      resultTitle.textContent = "ヒュッ……！";
+      resultText.textContent = "ダーツが飛んでいる……";
+
+      // 少し待ってから結果を表示する
+      throwTimer = window.setTimeout(() => {
+        throwTimer = null;
+
+        const dart = randomThrow();
+
+        throwCount++;
+        scores.push(dart.score);
+        totalScore += dart.score;
+        darts.push(dart);
+
+        drawBoard();
+        updateStats();
+        addHistory(dart.score, throwCount);
+
+        resultTitle.textContent = `${dart.score} 点！`;
+
+        resultText.textContent = dart.score === 0
+          ? "ボードの外！次のスローで挽回しよう。"
+          : "ナイススロー！次のダーツも狙っていこう。";
+
+        if (throwCount >= 9) {
+          resultTitle.textContent =
+            `ゲーム終了！ 合計 ${totalScore} 点`;
+
+          resultText.textContent =
+            `9本の平均は ${(totalScore / 9).toFixed(1)} 点。` +
+            "もう一度プレイで再挑戦！";
+
+          throwButton.textContent = "ゲーム終了";
+          throwButton.disabled = true;
+        } else {
+          throwButton.disabled = false;
+        }
+
+        busy = false;
+      }, 450);
+    }
+
+    // ===== ゲームを最初からやり直す =====
+
+    function resetGame() {
+      // 進行中のタイマーがあれば停止
+      if (throwTimer !== null) {
+        window.clearTimeout(throwTimer);
+        throwTimer = null;
+      }
+
+      totalScore = 0;
+      throwCount = 0;
+      scores = [];
+      darts = [];
+      busy = false;
+
+      throwButton.disabled = false;
+      throwButton.textContent = "ダーツを投げる";
+
+      resultTitle.textContent = "準備OK！";
+      resultText.textContent =
+        "狙い方を選んで、ダーツを投げよう。";
+
+      historyList.innerHTML =
+        '<span class="history-item">まだ投げていません</span>';
+
+      updateStats();
+      drawBoard();
+    }
+
+    // ===== ボタンと処理を接続 =====
+
+    throwButton.addEventListener("click", throwDart);
+    resetButton.addEventListener("click", resetGame);
+
+    // 最初の画面を表示
+    updateStats();
+    drawBoard();
+  </script>
+</body>
+</html>
