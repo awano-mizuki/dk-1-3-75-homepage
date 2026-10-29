@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スロットゲーム 一年三組</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@400;700&family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================
+           基本デザイン
+        ========================= */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px;
+
+            font-family: "Zen Maru Gothic", sans-serif;
+            color: #f8e7b0;
+            text-align: center;
+
+            background:
+                radial-gradient(ellipse at top, #176344 0%, transparent 55%),
+                linear-gradient(135deg, #061e17, #0b3828 55%, #041710);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* =========================
+           管理者サイトへのリンク
+        ========================= */
+        header {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .admin a {
+            display: inline-block;
+            padding: 9px 16px;
+
+            color: #e7c66f;
+            text-decoration: none;
+            font-size: 14px;
+
+            border: 1px solid #b99746;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.25);
+
+            transition: 0.2s;
+        }
+
+        .admin a:hover {
+            color: #10291d;
+            background: #e7c66f;
+        }
+
+        /* =========================
+           タイトル
+        ========================= */
+        .title-area {
+            margin: 10px 0 30px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #f5d982;
+            font-size: clamp(27px, 5vw, 43px);
+            font-weight: 900;
+            letter-spacing: 2px;
+
+            text-shadow:
+                0 2px 0 #805c1c,
+                0 5px 18px rgba(0, 0, 0, 0.6);
+        }
+
+        .subtitle {
+            margin-top: 10px;
+            color: #c9d9ca;
+            font-size: 15px;
+            letter-spacing: 2px;
+        }
+
+        .gold-line {
+            width: min(320px, 80%);
+            height: 2px;
+            margin: 18px auto 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                #d8b65f,
+                #fff0ae,
+                #d8b65f,
+                transparent
+            );
+        }
+
+        /* =========================
+           スロット本体
+        ========================= */
+        #game-screen {
+            position: relative;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(8px, 3vw, 22px);
+
+            width: 100%;
+            max-width: 680px;
+            min-height: 200px;
+            padding: clamp(18px, 5vw, 38px);
+
+            border: 3px solid #d8b65f;
+            border-radius: 20px;
+
+            background:
+                linear-gradient(145deg, #124632, #06251a 70%);
+
+            box-shadow:
+                0 0 0 6px rgba(216, 182, 95, 0.12),
+                0 15px 40px rgba(0, 0, 0, 0.45),
+                inset 0 0 25px rgba(0, 0, 0, 0.45);
+
+            cursor: pointer;
+            user-select: none;
+
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        #game-screen:hover {
+            border-color: #ffe8a0;
+            transform: translateY(-2px);
+        }
+
+        #game-screen:active {
+            transform: scale(0.99);
+        }
+
+        /* =========================
+           数字カード
+        ========================= */
+        .card {
+            flex: 1;
+            min-width: 0;
+            max-width: 145px;
+
+            padding: 7px;
+            border: 2px solid #d5b25b;
+            border-radius: 14px;
+
+            background: linear-gradient(145deg, #f9f0d8, #c8b783);
+
+            box-shadow:
+                0 5px 0 #80672f,
+                0 9px 15px rgba(0, 0, 0, 0.35);
+        }
+
+        .card-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: clamp(100px, 20vw, 145px);
+            padding: 8px;
+
+            border: 2px solid #e4c66e;
+            border-radius: 8px;
+
+            background:
+                radial-gradient(circle at center, #263b30, #081710 80%);
+        }
+
+        .card-number {
+            margin: 0;
+            color: #ffe69a;
+
+            font-family: "M PLUS Rounded 1c", sans-serif;
+            font-size: clamp(38px, 9vw, 68px);
+            font-weight: 700;
+            line-height: 1;
+
+            text-shadow:
+                0 0 8px rgba(255, 220, 115, 0.4),
+                0 3px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        /* =========================
+           案内メッセージ
+        ========================= */
+        #chance-area {
+            width: 100%;
+            max-width: 680px;
+            min-height: 90px;
+            margin-top: 28px;
+            padding: 20px 16px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            color: #ffe69a;
+            font-family: "Kosugi Maru", sans-serif;
+            font-size: clamp(16px, 3vw, 21px);
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+
+            border: 1px solid rgba(216, 182, 95, 0.6);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.25);
+
+            text-shadow: 0 0 8px rgba(255, 220, 115, 0.2);
+        }
+
+        /* =========================
+           トップに戻るボタン
+        ========================= */
+        .btn-back {
+            display: inline-block;
+            margin-top: 26px;
+            padding: 13px 30px;
+
+            color: #ffe8a0;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+
+            border: 2px solid #c7a04b;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #164a34, #09271c);
+
+            box-shadow: 0 5px 0 #06170f;
+            transition: 0.2s;
+        }
+
+        .btn-back:hover {
+            color: #10291d;
+            background: linear-gradient(135deg, #f7df91, #c7a04b);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 #06170f;
+        }
+
+        .btn-back:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 #06170f;
+        }
+
+        .footer-note {
+            margin-top: 28px;
+            color: #a9c0ad;
+            font-size: 12px;
+        }
+
+        /* =========================
+           スマートフォン対応
+        ========================= */
+        @media (max-width: 480px) {
+            body {
+                padding: 14px;
+            }
+
+            header {
+                margin-bottom: 8px;
+            }
+
+            .title-area {
+                margin-bottom: 22px;
+            }
+
+            #game-screen {
+                min-height: 145px;
+                border-radius: 14px;
+            }
+
+            .card {
+                padding: 4px;
+                border-radius: 9px;
+            }
+
+            .card-content {
+                padding: 4px;
+                border-radius: 6px;
+            }
+
+            #chance-area {
+                margin-top: 22px;
+                padding: 14px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="admin">
+            <a href="school_festival_admin.html">管理者サイトへ！</a>
+        </div>
+    </header>
+
+    <main style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <div class="title-area">
+            <h1>スロット</h1>
+            <div class="subtitle">一年三組 CASINO</div>
+            <div class="gold-line"></div>
+        </div>
+
+        <div id="game-screen" aria-label="クリックしてスロットを進める">
+            <div class="card">
+                <div class="card-content">
+                    <p class="card-number" id="num-a">-</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <p class="card-number" id="num-b">-</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <p class="card-number" id="num-c">-</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="chance-area" aria-live="polite">
+            カードをクリックしてスタート
+        </div>
+
+        <a href="index.html" class="btn-back">トップに戻る</a>
+
+        <div class="footer-note">
+            YEAR 1 · CLASS 3
+        </div>
+    </main>
+
+    <script>
+        // =========================
+        // 設定
+        // =========================
+
+        // 最後に移動するファイル名
+        // const NEXT_PAGE = "school_festival_get.html";
+
+        // 最後のメッセージを出してから移動するまでの時間
+        const NEXT_DELAY = 5000;
+
+        // メッセージが自動で次に進むまでの時間
+        const AUTO_DELAY = 1000;
+
+        // 数字が順番に表示される間隔
+        const REVEAL_INTERVAL = 600;
+
+        function randInt(min, maxExclusive) {
+            return Math.floor(Math.random() * (maxExclusive - min)) + min;
+        }
+
+        // =========================
+        // ゲームの進行手順を作る
+        // =========================
+        function buildSteps() {
+            const steps = [];
+
+            function addFrame(a, b, c) {
+                steps.push({ type: "frame", a: a, b: b, c: c });
+            }
+
+            function addMessage(text) {
+                steps.push({ type: "message", text: text });
+            }
+
+            function addChance(text) {
+                steps.push({ type: "chance", text: text });
+            }
+
+            let a = randInt(5, 9);
+            let b = randInt(5, 9);
+            let c = randInt(5, 9);
+            let n = 0;
+
+            addFrame(a, b, c);
+
+            for (let d = 1; d < 5; d++) {
+                if (a === b && b === c) {
+                    if (a === 7) {
+                        addChance("777おめでとう!!");
+                    } else {
+                        while (n < 1) {
+                            addChance("チャンス開始!");
+                            addChance("777を狙え!");
+                            addChance("※チャンスになると、7になる確率が1/4から1/2にアップ!!そして、必ず同じ数が出るようになる!!");
+                            n++;
+                        }
+
+                        for (let e = 0; e < 2; e++) {
+                            a = randInt(6, 8);
+                            b = a;
+                            c = a;
+                            addFrame(a, b, c);
+                        }
+                    }
+                } else {
+                    addMessage("もう一回遊べるドン");
+
+                    a = randInt(5, 9);
+                    b = randInt(5, 9);
+                    c = randInt(5, 9);
+
+                    addFrame(a, b, c);
+                }
+            }
+
+            addMessage("また遊びにきてね♩");
+
+            return steps;
+        }
+
+        const steps = buildSteps();
+
+        const gameScreen = document.getElementById("game-screen");
+        const numA = document.getElementById("num-a");
+        const numB = document.getElementById("num-b");
+        const numC = document.getElementById("num-c");
+        const chanceArea = document.getElementById("chance-area");
+
+        let index = 0;
+        let busy = false;
+
+        // =========================
+        // メッセージを自動で進める
+        // =========================
+        function autoNext() {
+            if (index >= steps.length) return;
+            if (steps[index].type === "frame") return;
+
+            busy = true;
+
+            setTimeout(() => {
+                busy = false;
+                showStep();
+            }, AUTO_DELAY);
+        }
+
+        // =========================
+        // 数字を順番に表示する
+        // =========================
+        function revealFrame(step, isLast) {
+            busy = true;
+            chanceArea.textContent = "";
+
+            numA.textContent = "-";
+            numB.textContent = "-";
+            numC.textContent = "-";
+
+            setTimeout(() => {
+                numA.textContent = step.c;
+            }, REVEAL_INTERVAL);
+
+            setTimeout(() => {
+                numB.textContent = step.b;
+            }, REVEAL_INTERVAL * 2);
+
+            setTimeout(() => {
+                numC.textContent = step.a;
+
+                if (!isLast) {
+                    busy = false;
+                    autoNext();
+                }
+            }, REVEAL_INTERVAL * 3);
+        }
+
+        // =========================
+        // 最後の数字をURLに付けて移動する
+        // =========================
+        function goNextPage() {
+            const lastFrame = [...steps]
+                .reverse()
+                .find((s) => s.type === "frame");
+
+            if (!lastFrame) {
+                window.location.href = NEXT_PAGE;
+                return;
+            }
+
+            // 今のURLの「?」以降のパラメータを引き継ぐ
+            const next = new URLSearchParams(location.search);
+
+            next.set("a", lastFrame.a);
+            next.set("b", lastFrame.b);
+            next.set("c", lastFrame.c);
+
+            window.location.href =
+                `${NEXT_PAGE}?${next.toString()}`;
+        }
+
+        // =========================
+        // ゲームを1ステップ進める
+        // =========================
+        function showStep() {
+            if (busy) return;
+
+            if (index >= steps.length) return;
+
+            const step = steps[index];
+            index++;
+
+            const isLast = index >= steps.length;
+
+            if (isLast) {
+                busy = true;
+                setTimeout(goNextPage, NEXT_DELAY);
+            }
+
+            if (step.type === "frame") {
+                revealFrame(step, isLast);
+            } else {
+                chanceArea.textContent = step.text;
+
+                if (!isLast) {
+                    autoNext();
+                }
+            }
+        }
+
+        // スロット部分をクリックすると進む
+        gameScreen.addEventListener("click", showStep);
+    </script>
+</body>
+</html>
